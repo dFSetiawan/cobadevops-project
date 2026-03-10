@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+
+  app:
+    image: php:8.2-apache
+    container_name: laravel_app
+    ports:
+      - "8000:80"
+    volumes:
+      - ./laravel-app:/var/www/html
+
+  database:
+    image: mysql:5.7
+    container_name: laravel_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel
+    ports:
+      - "3306:3306"
+
+volumes:
+  jenkins_home:
