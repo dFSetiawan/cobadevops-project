@@ -4,23 +4,20 @@ node {
         checkout scm
     }
 
-    stage("Debug Workspace") {
-        sh '''
-        pwd
-        ls -la
-        ls -la laravel-app
-        '''
+    stage("Start Container") {
+        sh 'docker compose up -d'
     }
 
     stage("Install Dependency") {
-        dir("laravel-app") {
-            sh '''
-            docker run --rm \
-            -v $(pwd):/app \
-            -w /app \
-            composer install
-            '''
-        }
+        sh 'docker compose exec app composer install'
+    }
+
+    stage("Laravel Setup") {
+        sh 'docker compose exec app php artisan key:generate'
+    }
+
+    stage("Migration") {
+        sh 'docker compose exec app php artisan migrate'
     }
 
 }
