@@ -1,9 +1,12 @@
 node {
 
+    stage("Checkout Code") {
+        checkout scm
+    }
+
     stage("Check Workspace") {
         sh 'pwd'
         sh 'ls -la'
-        sh 'ls -la laravel-app'
     }
 
     stage("Install Dependency") {
